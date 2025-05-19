@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Global Fix - Exchange Details</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: white;
+      padding: 2rem;
+    }
+    .container {
+      max-width: 650px;
+      margin: auto;
+      background-color: rgba(255,255,255,0.08);
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+    h1, h2 {
+      text-align: center;
+      color: #00d4ff;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+    label {
+      margin: 10px 0 5px;
+    }
+    select, input {
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+    }
+    button {
+      margin-top: 1rem;
+      padding: 12px;
+      background-color: #00d4ff;
+      border: none;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .result {
+      margin-top: 2rem;
+      background-color: rgba(0, 0, 0, 0.4);
+      padding: 1rem;
+      border-radius: 10px;
+    }
+    .result p {
+      margin: 8px 0;
+      font-size: 1.05rem;
+    }
+    .back-link {
+      text-align: center;
+      margin-top: 2rem;
+    }
+    .back-link a {
+      color: #00d4ff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .section-divider {
+      margin: 30px 0 10px;
+      border-top: 1px solid rgba(255,255,255,0.2);
+    }
+    .payment-details {
+      margin-top: 20px;
+      display: none;
+    }
+    .card-info, .bank-info {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Currency Conversion Details</h1>
+
+    <form id="conversionForm">
+      <!-- Currency conversion inputs -->
+      <label for="fromCurrency">From Currency:</label>
+      <select id="fromCurrency"></select>
+
+      <label for="toCurrency">To Currency:</label>
+      <select id="toCurrency"></select>
+
+      <label for="amount">Amount:</label>
+      <input type="number" id="amount" required placeholder="Enter amount" />
+
+      <div class="section-divider"></div>
+
+      <!-- Payment options -->
+      <h2>Payment Options</h2>
+
+      <label for="paymentMethod">Choose Payment Method:</label>
+      <select id="paymentMethod">
+        <option value="Visa">Visa</option>
+        <option value="MasterCard">MasterCard</option>
+        <option value="Revolut">Revolut</option>
+        <option value="Wise">Wise</option>
+        <option value="Crypto">Cryptocurrency</option>
+        <option value="Bank Transfer">Bank Transfer</option>
+        <option value="Card Deposit">Card Deposit</option>
+      </select>
+
+      <!-- Bank account and card info fields -->
+      <div class="payment-details">
+        <div class="bank-info">
+          <h3>Bank Account Details</h3>
+          <label for="bankAccount">Bank Account Number:</label>
+          <input type="text" id="bankAccount" placeholder="Enter bank account number" />
+
+          <label for="bankName">Bank Name:</label>
+          <input type="text" id="bankName" placeholder="Enter bank name" />
+
+          <label for="routingNumber">Routing Number:</label>
+          <input type="text" id="routingNumber" placeholder="Enter routing number" />
+        </div>
+
+        <div class="card-info">
+          <h3>Card Details</h3>
+          <label for="cardNumber">Card Number:</label>
+          <input type="text" id="cardNumber" placeholder="Enter card number" />
+
+          <label for="expirationDate">Expiration Date (MM/YY):</label>
+          <input type="text" id="expirationDate" placeholder="MM/YY" />
+
+          <label for="cvv">CVV:</label>
+          <input type="text" id="cvv" placeholder="Enter CVV" />
+        </div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <label for="deliveryMethod">Delivery Method:</label>
+      <select id="deliveryMethod">
+        <option value="Bank Transfer">Bank Transfer</option>
+        <option value="Card Deposit">Card Deposit</option>
+        <option value="Wallet Transfer">Wallet Transfer</option>
+      </select>
+
+      <button type="submit">Convert</button>
+    </form>
+
+    <!-- Conversion result -->
+    <div class="result" id="conversionResult" style="display:none;"></div>
+
+    <!-- Confirmation button -->
+    <div style="text-align: center; margin-top: 1.5rem; display: none;" id="confirmSection">
+      <button onclick="alert('Transaction confirmed!')">Review & Confirm</button>
+    </div>
+
+    <!-- Back link -->
+    <div class="back-link">
+      <a href="cp.html">&larr; Back to Main Page</a>
+    </div>
+  </div>
+
+  <script>
+    async function getRates() {
+      const res = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+      return (await res.json()).rates;
+    }
+
+    function convertCurrency(amount, from, to, rates) {
+      const converted = (amount / rates[from]) * rates[to];
+      return converted.toFixed(2);
+    }
+
+    async function populateDropdowns() {
+      const rates = await getRates();
+      const currencies = Object.keys(rates);
+      const fromSelect = document.getElementById('fromCurrency');
+      const toSelect = document.getElementById('toCurrency');
+
+      currencies.forEach(curr => {
+        const option1 = new Option(curr, curr);
+        const option2 = new Option(curr, curr);
+        fromSelect.add(option1);
+        toSelect.add(option2);
+      });
+
+      fromSelect.value = "USD";
+      toSelect.value = "EUR";
+    }
+
+    document.getElementById('conversionForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const from = document.getElementById('fromCurrency').value;
+      const to = document.getElementById('toCurrency').value;
+      const amount = parseFloat(document.getElementById('amount').value);
+      const payMethod = document.getElementById('paymentMethod').value;
+      const deliveryMethod = document.getElementById('deliveryMethod').value;
+
+      const rates = await getRates();
+      const result = convertCurrency(amount, from, to, rates);
+      const fee = "0.00"; // Service fee is always 0
+      const net = result - parseFloat(fee); // Adjust net based on the fee
+
+      document.getElementById('conversionResult').innerHTML = `
+        <p><strong>Amount:</strong> ${amount} ${from}</p>
+        <p><strong>Exchange Rate:</strong> 1 ${from} = ${(rates[to] / rates[from]).toFixed(4)} ${to}</p>
+        <p><strong>Converted:</strong> ${result} ${to}</p>
+        <p><strong>Service Fee:</strong> ${fee} ${from}</p>
+        <p><strong>Net You Receive:</strong> ${net} ${to}</p>
+        <p><strong>Payment Method:</strong> ${payMethod}</p>
+        <p><strong>Delivery Method:</strong> ${deliveryMethod}</p>
+        <p><strong>Estimated Time:</strong> ${
+          deliveryMethod === 'Card Deposit' ? 'Instant' : 
+          deliveryMethod === 'Bank Transfer' ? '1-2 business days' : 
+          'Within minutes'
+        }</p>
+      `;
+      document.getElementById('conversionResult').style.display = 'block';
+      document.getElementById('confirmSection').style.display = 'block';
+    });
+
+    document.getElementById('paymentMethod').addEventListener('change', function () {
+      const method = this.value;
+      const bankInfo = document.querySelector('.bank-info');
+      const cardInfo = document.querySelector('.card-info');
+      const paymentDetails = document.querySelector('.payment-details');
+
+      if (method === 'Bank Transfer') {
+        bankInfo.style.display = 'block';
+        cardInfo.style.display = 'none';
+        paymentDetails.style.display = 'block';
+      } else if (method === 'Card Deposit') {
+        cardInfo.style.display = 'block';
+        bankInfo.style.display = 'none';
+        paymentDetails.style.display = 'block';
+      } else {
+        paymentDetails.style.display = 'none';
+      }
+    });
+
+    window.onload = populateDropdowns;
+  </script>
+</body>
+</html>

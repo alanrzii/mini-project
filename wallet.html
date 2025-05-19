@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Wallet - Global Fix</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #0f2027;
+      color: white;
+      padding: 2rem;
+    }
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    }
+    h1 {
+      text-align: center;
+      color: #00d4ff;
+    }
+    .select-currency {
+      margin: 2rem 0;
+      text-align: center;
+    }
+    select {
+      padding: 10px;
+      width: 100%;
+      border-radius: 6px;
+      border: none;
+      font-size: 1rem;
+      background-color: #1c2d33;
+      color: #00d4ff;
+    }
+    .balance-display {
+      margin-top: 1rem;
+      font-size: 1.5rem;
+      text-align: center;
+      color: #ffffff;
+    }
+    button {
+      margin-top: 1.5rem;
+      padding: 12px;
+      background-color: #00d4ff;
+      border: none;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+      color: #000;
+    }
+    .back-link {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .back-link a {
+      color: #00d4ff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Wallet</h1>
+
+    <div class="select-currency">
+      <label for="currency">Select Currency:</label>
+      <select id="currency" onchange="updateBalance()">
+        <optgroup label="Fiat Currencies">
+          <option value="USD">$0.00 (USD)</option>
+          <option value="EUR">€0.00 (EUR)</option>
+          <option value="GBP">£0.00 (GBP)</option>
+          <option value="JPY">¥0.00 (JPY)</option>
+          <option value="AUD">A$0.00 (AUD)</option>
+          <option value="CAD">C$0.00 (CAD)</option>
+          <option value="CHF">Fr.0.00 (CHF)</option>
+          <option value="CNY">¥0.00 (CNY)</option>
+          <option value="INR">₹0.00 (INR)</option>
+          <option value="MXN">$0.00 (MXN)</option>
+          <option value="BRL">R$0.00 (BRL)</option>
+          <option value="RUB">₽0.00 (RUB)</option>
+          <option value="ZAR">R0.00 (ZAR)</option>
+          <option value="SEK">kr0.00 (SEK)</option>
+          <option value="NOK">kr0.00 (NOK)</option>
+          <option value="DKK">kr0.00 (DKK)</option>
+          <option value="SGD">S$0.00 (SGD)</option>
+          <option value="HKD">HK$0.00 (HKD)</option>
+          <option value="THB">฿0.00 (THB)</option>
+          <option value="MYR">RM0.00 (MYR)</option>
+          <option value="PHP">₱0.00 (PHP)</option>
+          <option value="IDR">Rp0.00 (IDR)</option>
+          <option value="TRY">₺0.00 (TRY)</option>
+          <option value="PLN">zł0.00 (PLN)</option>
+          <option value="HUF">Ft0.00 (HUF)</option>
+          <option value="CZK">Kč0.00 (CZK)</option>
+          <option value="ILS">₪0.00 (ILS)</option>
+          <option value="SAR">﷼0.00 (SAR)</option>
+          <option value="AED">د.إ0.00 (AED)</option>
+          <option value="EGP">E£0.00 (EGP)</option>
+          <option value="NGN">₦0.00 (NGN)</option>
+          <option value="PKR">₨0.00 (PKR)</option>
+          <option value="TWD">NT$0.00 (TWD)</option>
+        </optgroup>
+
+        <optgroup label="Cryptocurrencies">
+          <option value="BTC">₿0.000000 (BTC)</option>
+          <option value="ETH">Ξ0.000000 (ETH)</option>
+          <option value="USDT">$0.00 (USDT)</option>
+          <option value="BNB">ⓑ0.00 (BNB)</option>
+          <option value="XRP">Ʀ0.00 (XRP)</option>
+          <option value="ADA">₳0.00 (ADA)</option>
+          <option value="DOGE">Ð0.00 (DOGE)</option>
+          <option value="SOL">◎0.00 (SOL)</option>
+          <option value="LTC">Ł0.00 (LTC)</option>
+          <option value="DOT">●0.00 (DOT)</option>
+          <option value="TRX">Ŧ0.00 (TRX)</option>
+          <option value="AVAX">₳VAX0.00</option>
+        </optgroup>
+      </select>
+    </div>
+
+    <div class="balance-display" id="balanceDisplay">
+      $0.00 (USD)
+    </div>
+
+    <button onclick="alert('Deposit feature coming soon!')">💰 Deposit Funds</button>
+    <button onclick="alert('Withdraw feature coming soon!')">💸 Withdraw Funds</button>
+
+    <div class="back-link">
+      <a href="cp.html">&larr; Back to Main Page</a>
+    </div>
+  </div>
+
+  <script>
+    function updateBalance() {
+      const select = document.getElementById('currency');
+      const balanceText = select.options[select.selectedIndex].text;
+      document.getElementById('balanceDisplay').textContent = balanceText;
+    }
+  </script>
+</body>
+</html>
